@@ -1,7 +1,6 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-
 // Global variable to store only the used keypoints from the detected pose.
 let usedKeypoints = null;
 
@@ -154,3 +153,47 @@ logPointsButton.addEventListener('click', () => {
     console.log("No keypoints detected yet.");
   }
 });
+
+
+
+//-------------------------------------------------------------------------------------------- ai
+
+const net = new brain.NeuralNetwork()
+
+const data = [{"input": {
+    "leftElbow_x": 511.2322235107422,
+    "leftElbow_y": 479.6886444091797,
+    "rightElbow_x": 174.99738693237305,
+    "rightElbow_y": 469.0567016601562,
+    "leftWrist_x": 430.8025360107422,
+    "leftWrist_y": 463.1979751586914,
+    "rightWrist_x": 192.32772827148438,
+    "rightWrist_y": 456.1587524414062,
+    "leftHip_x": 432.6876449584961,
+    "leftHip_y": 473.95305633544916,
+    "rightHip_x": 126.71439170837402,
+    "rightHip_y": 489.79255676269526,
+    "leftEar_x": 393.0955505371094,
+    "leftEar_y": 372.8730010986328,
+    "rightEar_x": 206.41138076782227,
+    "rightEar_y": 377.66239166259766,
+    "leftJaw_x": 393.0955505371094,
+    "leftJaw_y": 407.8730010986328,
+    "rightJaw_x": 206.41138076782227,
+    "rightJaw_y": 412.66239166259766,
+    "headCenter_x": 299.7534656524658,
+    "headCenter_y": 322.8730010986328}
+
+
+
+
+, "output": {
+    "leftElbow":0,
+    "rightElbow":0,
+    "leftWrist":0,
+    "rightWrist":0,
+    "leftHip":0,
+    "rightHip":0,
+    "head":0,
+
+}}]
