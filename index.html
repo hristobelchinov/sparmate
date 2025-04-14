@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Normalized Pose Points for AI</title>
+  <style>
+    body { 
+      margin: 0; 
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    /* Hide the video if you don't want to display it */
+    #video { 
+      display: none;
+    }
+    /* Style for our buttons */
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    #buttonContainer {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <!-- Hidden video element to capture camera stream -->
+  <video id="video" width="640" height="480" autoplay muted playsinline></video>
+  
+  <!-- Container for control buttons -->
+  <div id="buttonContainer">
+    <button id="toggleHandedButton" class="btn">Left Handed: OFF</button>
+    <button id="logPointsButton" class="btn">Log Processed Keypoints</button>
+  </div>
+
+  <!-- TensorFlow.js and MoveNet Pose Detection -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+
+  <script>
+    // Grab the video element.
+    const video = document.getElementById('video');
+
+    // Global variable to hold the processed keypoints.
+    let processedKeypoints = null;
+    // Flag indicating if the feed is for a left-handed user.
+    let isLeftHanded = false;
+
+    // Toggle button to mark left-handedness.
+    const toggleHandedButton = document.getElementById('toggleHandedButton');
+    toggleHandedButton.addEventListener('click', () => {
+      isLeftHanded = !isLeftHanded;
+      toggleHandedButton.textContent = `Left Handed: ${isLeftHanded ? 'ON' : 'OFF'}`;
+    });
+
+    // Button to log processed keypoints.
+    const logPointsButton = document.getElementById('logPointsButton');
+    logPointsButton.addEventListener('click', () => {
+      if (processedKeypoints) {
+        console.log("Processed keypoints:", processedKeypoints);
+      } else {
+        console.log("No keypoints processed yet.");
+      }
+    });
+
+    // Sets up the camera and returns the video once metadata is loaded.
+    async function setupCamera() {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      return new Promise(resolve => {
+        video.onloadedmetadata = () => resolve(video);
+      });
+    }
+
+    // Helper: Calculate Euclidean distance if both points are reliable.
+    function getDistance(a, b) {
+      return (a?.score > 0.4 && b?.score > 0.4)
+        ? Math.hypot(a.x - b.x, a.y - b.y)
+        : null;
+    }
+
+
+    async function main() {
+      await tf.setBackend('webgl');
+      await setupCamera();
+
+      // Create the pose detector using the MoveNet model.
+      const detector = await poseDetection.createDetector(
+        poseDetection.SupportedModels.MoveNet,
+        { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING }
+      );
+
+      video.play();
+
+      // Continuously detect the pose.
+      async function detectPose() {
+        const poses = await detector.estimatePoses(video);
+        if (poses.length > 0 && poses[0].keypoints) {
+          const k = poses[0].keypoints;
+
+          // Extract only the keypoints of interest.
+          const leftElbow  = k[7],   rightElbow = k[8];
+          const leftWrist  = k[9],   rightWrist = k[10];
+          const leftHip    = k[11],  rightHip   = k[12];
+          const leftEar    = k[3],   rightEar   = k[4];
+
+          // Calculate jaw points based on ear positions.
+          const leftJaw  = { x: leftEar.x,  y: leftEar.y + 35, score: leftEar.score };
+          const rightJaw = { x: rightEar.x, y: rightEar.y + 35, score: rightEar.score };
+
+          // Calculate head center if both ears are reliable.
+          // This will be our reference point for centering.
+          const headCenter = (leftEar.score > 0.4 && rightEar.score > 0.4) ? {
+            x: (leftEar.x + rightEar.x) / 2,
+            y: Math.min(leftEar.y, rightEar.y) - 50,
+            score: 1.0
+          } : null;
+
+          // Choose a center point.
+          // Here use headCenter if available; otherwise, fallback to the midpoint of the hips.
+          let center;
+          if (headCenter) {
+            center = headCenter;
+          } else {
+            center = {
+              x: (leftHip.x + rightHip.x) / 2,
+              y: (leftHip.y + rightHip.y) / 2,
+              score: Math.min(leftHip.score, rightHip.score)
+            };
+          }
+
+          // Build an object with the keypoints we want.
+          const rawKeypoints = {
+            leftElbow, rightElbow,
+            leftWrist, rightWrist,
+            leftHip, rightHip,
+            leftEar, rightEar,
+            leftJaw, rightJaw,
+            headCenter
+          };
+
+          // Center the keypoints by subtracting the chosen center point.
+          function centerKeypoint(p) {
+            return {
+              x: p.x - center.x,
+              y: p.y - center.y,
+              score: p.score
+            };
+          }
+          
+          const centeredKeypoints = {};
+          for (const [key, point] of Object.entries(rawKeypoints)) {
+            if (point) {
+              centeredKeypoints[key] = centerKeypoint(point);
+            } else {
+              centeredKeypoints[key] = null;
+            }
+          }
+
+          // If left-handed mode is activated, flip the x value (multiply by -1).
+          if (isLeftHanded) {
+            for (const key in centeredKeypoints) {
+              const point = centeredKeypoints[key];
+              if (point) {
+                point.x = -point.x;
+              }
+            }
+          }
+
+          // Save the processed, normalized keypoints.
+          processedKeypoints = centeredKeypoints;
+        }
+        requestAnimationFrame(detectPose);
+      }
+      detectPose();
+    }
+
+    main().catch(err => {
+      console.error("Error initializing pose detection:", err);
+    });
+  </script>
+</body>
+</html>
