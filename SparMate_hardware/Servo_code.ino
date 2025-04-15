@@ -1,6 +1,5 @@
 #include <ESP32Servo.h>
 
-// Declare Servo objects
 Servo jab;
 Servo cross;
 Servo leftHook;
@@ -8,16 +7,11 @@ Servo rightHook;
 Servo leftUppercut;
 Servo rightUppercut;
 
-int easyCombos[6][10] = {
-  {}
-
-
-
-}
+#include "Combos.h"
 
 void setup() {
 
-  // Set frequency
+  // Set working frequency
   jab.setPeriodHertz(50);
   cross.setPeriodHertz(50);
   leftHook.setPeriodHertz(50);
@@ -42,48 +36,41 @@ void setup() {
   leftUppercut.write(10);
 }
 
-// punch function
+// Punch function for executing a punch
 void punch(Servo* punch) {
-  if(punch == &jab){
-    punch->write(100);
-    delay(300);
-    punch->write(180);
-  }
-  if (punch == &rightHook) {
+  if(punch == JAB || punch == RIGHTHOOK || punch == RIGHTUPPERCUT){
     punch->write(90);
     delay(300);
     punch->write(170);
   }
-  if (punch == &rightUppercut) {
-    punch->write(90);
-    delay(300);
-    punch->write(170);
-  }
-  if (punch == &cross || punch == &leftHook || punch == &leftUppercut) {
+  if (punch == CROSS || punch == LEFTHOOK || punch == LEFTUPPERCUT) {
     punch->write(90);
     delay(300);
     punch->write(10);
   }
 }
 
+void fight(int difficulty){
+
+}
 
 void loop() {
-  punch(&jab);
+  punch(JAB);
   delay(1000);
 
-  punch(&cross);
+  punch(CROSS);
   delay(1000);
 
-  punch(&leftHook);
+  punch(LEFTHOOK);
   delay(1000);
 
-  punch(&rightHook);
+  punch(RIGHTHOOK);
   delay(1000);
 
-  punch(&leftUppercut);
+  punch(LEFTUPPERCUT);
   delay(1000);
 
-  punch(&rightUppercut);
+  punch(RIGHTUPPERCUT);
   delay(1000);
 
   delay(4000); // After full combo
