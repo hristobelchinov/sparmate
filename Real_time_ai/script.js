@@ -93,17 +93,17 @@ async function main() {
     // Extract keypoints we need
     if (poses.length > 0 && poses[0].keypoints) {
       const k = poses[0].keypoints;
-      const leftElbow  = k[7], rightElbow = k[8];
-      const leftWrist  = k[9], rightWrist = k[10];
-      const leftHip    = k[11], rightHip   = k[12];
-      const leftEar    = k[3], rightEar   = k[4];
+      const leftElbow = k[7], rightElbow = k[8];
+      const leftWrist = k[9], rightWrist = k[10];
+      const leftHip = k[11], rightHip = k[12];
+      const leftEar = k[3], rightEar = k[4];
 
       
       //calcuate the jaw points
-      const leftJaw = { x: leftEar.x, y: leftEar.y + 35, score: leftEar.score };
-      const rightJaw = { x: rightEar.x, y: rightEar.y + 35, score: rightEar.score };
+      const leftJaw = { x: leftEar.x, y: leftEar.y+35, score: leftEar.score };
+      const rightJaw = { x: rightEar.x, y: rightEar.y+35, score: rightEar.score };
       
-      const headCenter = (leftEar.score > 0.4 && rightEar.score > 0.4) ? {
+      const headCenter = (leftEar.score >0.4 && rightEar.score >0.4) ? {
         x: (leftEar.x + rightEar.x) / 2,
         y: Math.min(leftEar.y, rightEar.y) - 50,
         score: 1.0
@@ -119,16 +119,16 @@ async function main() {
       };
       
       const hipCenter = {
-        x: (leftHip.x + rightHip.x) / 2,
-        y: (leftHip.y + rightHip.y) / 2
+        x: (leftHip.x+rightHip.x)/2,
+        y: (leftHip.y+rightHip.y)/2
       };
       
       const depthScale = getDepthScale(k);
       
       function normalizeKeypoint(p) {
         return {
-          x: (p.x - hipCenter.x) / depthScale,
-          y: (p.y - hipCenter.y) / depthScale,
+          x: (p.x-hipCenter.x)/depthScale,
+          y: (p.y-hipCenter.y)/depthScale,
           score: p.score
         };
       }
@@ -156,10 +156,10 @@ async function main() {
       usedKeypoints = normalizedKeypoints;
       
       [leftJaw, rightJaw, leftHip, rightHip, headCenter]
-        .filter(p => p && p.score > 0.4)
+        .filter(p => p && p.score>0.4)
         .forEach(p => drawPoint(flipX(p.x), p.y, 'blue'));
       [leftElbow, rightElbow, leftWrist, rightWrist]
-        .filter(p => p && p.score > 0.4)
+        .filter(p => p && p.score>0.4)
         .forEach(p => drawPoint(flipX(p.x), p.y, 'lime'));
 
       const scale = getDepthScale(k) || 200;
@@ -219,14 +219,14 @@ logInputButton.addEventListener('click', () => {
 
 function updateFeedback(prediction) {
   let message = "";
-  if (prediction.leftElbow < 0.5) message += "Left elbow is out of guard!<br>";
-  if (prediction.rightElbow < 0.5) message += "Right elbow is out of guard!<br>";
-  if (prediction.leftWrist < 0.5) message += "Left wrist open!<br>";
-  if (prediction.rightWrist < 0.5) message += "Right wrist open!<br>";
-  if (prediction.leftHip < 0.5) message += "Left hip needs adjustment!<br>";
-  if (prediction.rightHip < 0.5) message += "Right hip needs adjustment!<br>";
-  if (prediction.head < 0.5) message += "Head protection is compromised!<br>";
-  if (!message) message = "Guard is solid!";
+  if(prediction.leftElbow <0.5) message += "Left elbow is out of guard!<br>";
+  if(prediction.rightElbow <0.5) message += "Right elbow is out of guard!<br>";
+  if(prediction.leftWrist < 0.5) message += "Left wrist open!<br>";
+  if(prediction.rightWrist <0.5) message += "Right wrist open!<br>";
+  if(prediction.leftHip <0.5) message += "Left hip needs adjustment!<br>";
+  if(prediction.rightHip <0.5) message += "Right hip needs adjustment!<br>";
+  if(prediction.head < 0.5) message += "Head protection is compromised!<br>";
+  if(!message) message = "Guard is solid!";
   document.querySelector('.feedback').innerHTML = message;
 }
 
