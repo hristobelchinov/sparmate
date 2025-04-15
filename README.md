@@ -1,1 +1,1 @@
-# sparmate
+# SparMate
