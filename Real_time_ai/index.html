@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Boxing Guard Tracker with Pose Visualization</title>
+  <title>Boxing Guard Tracker - Log Input Data (Hip Center Normalization)</title>
   <style>
     body { margin: 0; overflow: hidden; }
     video, canvas {
@@ -11,27 +11,70 @@
       left: 0;
     }
     /* Style for the button */
-    #logPointsButton {
+    #logInputButton {
       position: absolute;
-      top: 500px; /* place it below the video/canvas */
+      top: 500px; /* below video/canvas */
       left: 10px;
       padding: 10px 20px;
       font-size: 16px;
-      z-index: 10; /* ensure the button is above the canvas */
+      z-index: 10;
+    }
+    /* Style for the checkboxes */
+    .hello {
+      position: absolute;
+      top: 500px; /* below video/canvas */
+      left: 200px;
+      padding: 10px 20px;
+      font-size: 16px;
+      z-index: 10;
+    }
+    .hello label {
+      margin-right: 5px;
     }
   </style>
 </head>
 <body>
   <video id="video" width="640" height="480" autoplay muted playsinline></video>
   <canvas id="canvas" width="640" height="480"></canvas>
-  <!-- Button to log the keypoints we care about -->
-  <button id="logPointsButton">Log Used Points</button>
+  <!-- Button to log the input data -->
+  <button id="logInputButton">Log Input</button>
+  
+  <!-- Output checkboxes -->
+  <div class="hello">
+    <label for="leftElbow">left elbow</label>
+    <input id="leftElbow" name="leftElbow" type="checkbox">
+    
+    <label for="rightElbow">right elbow</label>
+    <input id="rightElbow" name="rightElbow" type="checkbox">
+    
+    <label for="leftWrist">left wrist</label>
+    <input id="leftWrist" name="leftWrist" type="checkbox">
+    
+    <label for="rightWrist">right wrist</label>
+    <input id="rightWrist" name="rightWrist" type="checkbox">
+    
+    <label for="leftHip">left hip</label>
+    <input id="leftHip" name="leftHip" type="checkbox">
+    
+    <label for="rightHip">right hip</label>
+    <input id="rightHip" name="rightHip" type="checkbox">
+    
+    <label for="head">head</label>
+    <input id="head" name="head" type="checkbox">
+    
+    <!-- ADDED: Checkbox for left handed toggle -->
+    <label for="leftHandedToggle">Left Handed</label>
+    <input id="leftHandedToggle" name="leftHandedToggle" type="checkbox">
+  </div>
 
-  <!-- TensorFlow + Pose -->
+  <!-- TensorFlow.js and MoveNet Pose Detection -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-  <script src="/script.js"></script>
+  <script src="//unpkg.com/brain.js" defer></script>
+  <script src="./script.js"></script>
+
 </body>
 </html>
+
