@@ -254,12 +254,15 @@ function updateFeedback(prediction) {
 }
 
 // --------------------------------------------------------------------------------------------
-// CHANGE: Train the network asynchronously using dummy training data for testing.
-const trainingData = JSON.parse(fs.readFileSync('trainingdata.json', 'utf8'));
 
 // Use an IIFE to train the network asynchronously before running main.
+let trainingData = [];
+
 (async () => {
   try {
+    const res = await fetch('trainingdata.json');
+    trainingData = await res.json();
+
     console.log("Training network...");
     await net.trainAsync(trainingData, {
       iterations: 1000,
@@ -268,9 +271,8 @@ const trainingData = JSON.parse(fs.readFileSync('trainingdata.json', 'utf8'));
       logPeriod: 100
     });
     console.log("Training complete.");
-    main().catch(err => {
-      console.error("Error initializing pose detection:", err);
-    });
+
+    await main();
   } catch (error) {
     console.error("Error during network training:", error);
   }
