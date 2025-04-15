@@ -3,35 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Boxing Guard Tracker - Log Input Data (Hip Center Normalization)</title>
-  <style>
-    body { margin: 0; overflow: hidden; }
-    video, canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    /* Style for the button */
-    #logInputButton {
-      position: absolute;
-      top: 500px; /* below video/canvas */
-      left: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      z-index: 10;
-    }
-    /* Style for the checkboxes */
-    .hello {
-      position: absolute;
-      top: 500px; /* below video/canvas */
-      left: 200px;
-      padding: 10px 20px;
-      font-size: 16px;
-      z-index: 10;
-    }
-    .hello label {
-      margin-right: 5px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <video id="video" width="640" height="480" autoplay muted playsinline></video>
@@ -66,13 +38,16 @@
     <label for="leftHandedToggle">Left Handed</label>
     <input id="leftHandedToggle" name="leftHandedToggle" type="checkbox">
   </div>
+  
+<div class="feedback">
 
+</div>
   <!-- TensorFlow.js and MoveNet Pose Detection -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-  <script src="//unpkg.com/brain.js" defer></script>
+  <script src="//unpkg.com/brain.js"></script>
   <script src="./script.js"></script>
 
 </body>
