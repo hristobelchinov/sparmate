@@ -1,7 +1,6 @@
 #ifndef COMBOS_H
 #define COMBOS_H
 
-// Macros for servo pointers. These assume that the Servo objects are declared in your main file.
 #define JAB           (&jab)
 #define CROSS         (&cross)
 #define LEFTHOOK      (&leftHook)
@@ -17,7 +16,6 @@
 // #define LEFTUPPERCUTF (&leftUppercut)
 // #define RIGHTUPPERCUTF (&rightUppercut)
 
-// ----- Combo timing settings -----
 #define EASY_PUNCH_TIMEOUT     3000
 #define EASY_COMBO_TIMEOUT     5000
 
@@ -30,13 +28,8 @@
 #define PRO_PUNCH_TIMEOUT      450
 #define PRO_COMBO_TIMEOUT      1250
 
-// Maximum moves per combo.
 #define MAX_MOVES 6
-// Sentinel value indicating no valid move (now as a pointer type)
 #define BLANK NULL
-
-// IMPORTANT: Change the array type from int to Servo* because we're storing pointer values.
-// Note that each combo row is now an array of Servo* values.
 
 Servo* EASY_COMBOS[3][MAX_MOVES] = {
   { JAB,       CROSS,       LEFTHOOK,     BLANK, BLANK, BLANK },
@@ -62,4 +55,4 @@ Servo* PRO_COMBOS[3][MAX_MOVES] = {
   { JAB,       CROSS,       JAB,          LEFTHOOK,  CROSS, BLANK }
 };
 
-#endif  // COMBOS_H
+#endif
