@@ -1,32 +1,74 @@
-
-body { margin: 0; overflow: hidden; }
-video, canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-/* Style for the button */
-#logInputButton {
-  position: absolute;
-  top: 500px; /* below video/canvas */
-  left: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  z-index: 10;
-}
-/* Style for the checkboxes */
-.hello {
-  position: absolute;
-  top: 500px; /* below video/canvas */
-  left: 200px;
-  padding: 10px 20px;
-  font-size: 16px;
-  z-index: 10;
-}
-.hello label {
-  margin-right: 5px;
-}
-.feedback{
-    margin-top: 550px;
-    margin-left: 350px;
-}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    overflow: hidden;
+  }
+  
+  video, canvas {
+    position: absolute;
+    font-size: 2em;
+    top: 0;
+    left: 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  }
+  
+  /* Button Styling */
+  #logInputButton {
+    position: absolute;
+    top: 500px;
+    left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #2e7d32;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s;
+  }
+  #logInputButton:hover {
+    background-color: #388e3c;
+  }
+  
+  /* Checkbox container */
+  .hello {
+    position: absolute;
+    top: 500px;
+    left: 200px;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 8px 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-bottom: 100px;
+    z-index: 10;
+  }
+  
+  .hello label {
+    margin-right: 8px;
+    text-transform: capitalize;
+  }
+  
+  /* Feedback box */
+  .feedback {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    width: 550px;
+    min-height: 300px;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #111;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 2em;
+    line-height: 1.4em;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+  
