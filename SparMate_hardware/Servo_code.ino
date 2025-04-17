@@ -66,15 +66,21 @@ void punch(Servo* punch) {
 }
 
 //======== EXECUTE COMBO ========//
-void fight(int DIFFICULTY){
+void fight(int d){
   int combo = random(0,2);
-  switch(DIFFICULTY){
+  switch(d){
     case 1: DIFFICULTY_COMBOS_LIST = EASY_COMBOS
-            PUNCH_TIMEOUT = EASY_PUNCH_TIMEOUT
-            COMBO_TIMEOUT = EASY_COMBO_TIMEOUT
+    break;
+    case 2: DIFFICULTY_COMBOS_LIST = NORMAL_COMBOS
+    break;
+    case 3: DIFFICULTY_COMBOS_LIST = ADVANCED_COMBOS
+    break;
+    case 4: DIFFICULTY_COMBOS_LIST = PRO_COMBOS
+    break;
   }
   for (int j; j < MAX_MOVES; j++){
-    punch(EASYCOMBOS[combo][j]);
+    punch(DIFFICULTY_COMBO_LIST[combo][j]);
+    delay(PUNCH_TIMEOUT);
     if(punch == BLANK){
       return;
     }
@@ -82,8 +88,8 @@ void fight(int DIFFICULTY){
 }
 
 //======== START/STOP BUTTON ========//
-bool running = true; //////////////////////////////////////////////////////////////////CHNAGE THAT YOU STUPID JEW
-void startstop(){
+bool running = true; //////////////////////////////////////////////////////////////////CHNAGE THAT YOU STUPID JEW////////////////////////////////////////////////////////////////////////////
+void startstop(){////// add DIFFICULTY = 0 for switching modes when you stop the fight
   int STARTSTOP_BUTTON = digitalRead(START_BUTTON_PIN);
   if(STARTSTOP_BUTTON == LOW){
     running = !running;
@@ -92,12 +98,11 @@ void startstop(){
 }
 
 //======== DIFFICULTY ========//
-int DIFFICULTY = 0;
+int DIFFICULTY = 3;
 int PUNCH_TIMEOUT;
 int COMBO_TIMEOUT;
 
 int selectDifficulty(){
-
   int EASY_BUTTON = digitalRead(EASY_BUTTON_PIN);
   int NORMAL_BUTTON = digitalRead(NORMAL_BUTTON_PIN);
   int ADVANCED_BUTTON = digitalRead(ADVANCED_BUTTON_PIN);
@@ -123,16 +128,21 @@ int selectDifficulty(){
     PUNCH_TIMEOUT = PRO_PUNCH_TIMEOUT;
     COMBO_TIMEOUT = PRO_COMBO_TIMEOUT;
   }
+  PUNCH_TIMEOUT = ADVANCED_PUNCH_TIMEOUT;
+  COMBO_TIMEOUT = ADVANCED_COMBO_TIMEOUT;
+   // while difficulty mode is 0 (not chosen)
+// Servo* (*CHOSEN_COMBOS_DIFF)[MAX_MOVES];
 
-  } // while difficulty mode is 0 (not chosen)
-Servo* (*CHOSEN_COMBOS_DIFF)[MAX_MOVES];
 }
 
 void loop() {
   startstop();
   if(running){
     selectDifficulty();
-    fight();
+    if(DIFFICULTY != 0){
+      fight(DIFFICULTY);
+      delay(COMBO_TIMEOUT);
+    }
   }
   
 }
