@@ -8,14 +8,6 @@
 #define LEFTUPPERCUT  (&leftUppercut)
 #define RIGHTUPPERCUT (&rightUppercut)
 
-//========FEINTS========//
-// #define JABF (&jab)
-// #define CROSSF (&cross)
-// #define LEFTHOOKF (&leftHook)
-// #define RIGHTHOOKF (&rightHook)
-// #define LEFTUPPERCUTF (&leftUppercut)
-// #define RIGHTUPPERCUTF (&rightUppercut)
-
 #define EASY_PUNCH_TIMEOUT     3000
 #define EASY_COMBO_TIMEOUT     5000
 
@@ -29,30 +21,30 @@
 #define PRO_COMBO_TIMEOUT      1250
 
 #define MAX_MOVES 6
-#define BLANK NULL
+#define BLANK nullptr
 
 Servo* EASY_COMBOS[3][MAX_MOVES] = {
-  { JAB,       CROSS,       LEFTHOOK,     BLANK, BLANK, BLANK },
-  { JAB,       LEFTHOOK,    CROSS,        RIGHTHOOK, BLANK, BLANK },
-  { JAB,       CROSS,       JAB,          LEFTHOOK,  CROSS, BLANK }
+  { JAB, CROSS, LEFTHOOK, BLANK, BLANK, BLANK },
+  { JAB, LEFTHOOK, CROSS, RIGHTHOOK, BLANK, BLANK },
+  { JAB, CROSS, JAB, LEFTHOOK, CROSS, BLANK }
 };
 
 Servo* NORMAL_COMBOS[3][MAX_MOVES] = {
-  { JAB,       CROSS,       LEFTHOOK,     BLANK, BLANK, BLANK },
-  { JAB,       LEFTHOOK,    CROSS,        RIGHTHOOK, BLANK, BLANK },
-  { JAB,       CROSS,       JAB,          LEFTHOOK,  CROSS, BLANK }
+  { JAB, CROSS, LEFTHOOK, BLANK, BLANK, BLANK },
+  { JAB, LEFTHOOK, CROSS, RIGHTHOOK, BLANK, BLANK },
+  { JAB, CROSS, JAB, LEFTHOOK, CROSS, BLANK }
 };
 
 Servo* ADVANCED_COMBOS[3][MAX_MOVES] = {
-  { JAB,       CROSS,       LEFTHOOK,     BLANK, BLANK, BLANK },
-  { JAB,       LEFTHOOK,    CROSS,        RIGHTHOOK, BLANK, BLANK },
-  { JAB,       CROSS,       JAB,          LEFTHOOK,  CROSS, BLANK }
+  { JAB, JAB, JAB, BLANK, BLANK, BLANK },
+  { CROSS, CROSS, CROSS, CROSS, CROSS, BLANK },
+  { LEFTHOOK, LEFTHOOK, JAB, LEFTHOOK, JAB, BLANK }
 };
 
 Servo* PRO_COMBOS[3][MAX_MOVES] = {
-  { JAB,       CROSS,       LEFTHOOK,     BLANK, BLANK, BLANK },
-  { JAB,       LEFTHOOK,    CROSS,        RIGHTHOOK, BLANK, BLANK },
-  { JAB,       CROSS,       JAB,          LEFTHOOK,  CROSS, BLANK }
+  { JAB, CROSS, LEFTHOOK, BLANK, BLANK, BLANK },
+  { JAB, LEFTHOOK, CROSS, RIGHTHOOK, BLANK, BLANK },
+  { JAB, CROSS, JAB, LEFTHOOK, CROSS, BLANK }
 };
 
 #endif
