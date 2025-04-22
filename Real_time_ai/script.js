@@ -64,7 +64,7 @@ function swapKeypoints(kp, keyA, keyB) {
   kp[keyB] = temp;
 }
 
-async function main() {
+async function main() {///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   await tf.setBackend('webgl');
   await setupCamera();
   
@@ -232,6 +232,7 @@ async function updateFeedback(prediction) {
     text = 4;
   }
 
+
   if(prediction.leftHip < 0.5) message += "Left hip needs adjustment!<br>";
   if(prediction.rightHip < 0.5) message += "Right hip needs adjustment!<br>";
   if(prediction.head < 0.5) message += "Head protection is compromised!<br>";
@@ -244,6 +245,7 @@ async function updateFeedback(prediction) {
     const data = new Uint8Array([text]);
     await writer.write(data);
     writer.releaseLock();
+    text = null;
   }
 }
 
