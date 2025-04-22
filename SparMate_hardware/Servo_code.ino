@@ -1,4 +1,3 @@
-// Servo_code.ino
 #include <ESP32Servo.h>
 
 Servo jab;
@@ -10,13 +9,12 @@ Servo rightUppercut;
 
 #include "Combos.h"
 
-#define START_BUTTON_PIN    4
-#define EASY_BUTTON_PIN     32
-#define NORMAL_BUTTON_PIN   33
-#define ADVANCED_BUTTON_PIN 34
-#define PRO_BUTTON_PIN      35
+#define START_BUTTON_PIN     4
+#define EASY_BUTTON_PIN     22
+#define NORMAL_BUTTON_PIN   23
+#define ADVANCED_BUTTON_PIN 32
+#define PRO_BUTTON_PIN      33
 
-// Global variables
 Servo* (*DIFFICULTY_COMBOS_LIST)[MAX_MOVES];
 bool running = true;
 int  DIFFICULTY = 0;
@@ -67,18 +65,29 @@ void punch(Servo* punch) {
     delay(300);
     punch->write(10);
   }
+
+  // if (punch == JABF || punch == RIGHTHOOKF || punch == RIGHTUPPERCUTF) {
+  //   punch->write(120);
+  //   delay(180);
+  //   punch->write(170);
+  // }
+  // if (punch == CROSSF || punch == LEFTHOOKF || punch == LEFTUPPERCUTF) {
+  //   punch->write(60);
+  //   delay(180);
+  //   punch->write(10);
+  // }
 }
 
 //======== EXECUTE COMBO ========//
 void fight(int DIFFICULTY) {
-  int combo = random(0, 3);  // Changed to 0-2 range for array indices
+  int combo = random(0, 5);
 
   switch (DIFFICULTY) {
     case 1: DIFFICULTY_COMBOS_LIST = EASY_COMBOS;     break;
     case 2: DIFFICULTY_COMBOS_LIST = NORMAL_COMBOS;   break;
     case 3: DIFFICULTY_COMBOS_LIST = ADVANCED_COMBOS; break;
     case 4: DIFFICULTY_COMBOS_LIST = PRO_COMBOS;      break;
-    default: return;  // Invalid difficulty, exit function
+    default: return;
   }
 
   for (int j = 0; j < MAX_MOVES; j++) {
@@ -94,12 +103,12 @@ void startstop() {
   int STARTSTOP_BUTTON = digitalRead(START_BUTTON_PIN);
   if (STARTSTOP_BUTTON == LOW) {
     running = !running;
-    delay(200);  // Debounce
+    delay(200);
   }
 }
 
-//======== DIFFICULTY ========// `      // here is the problem BROOOOOOO ITS T+RUGHT HER BECAUSE IT SOMEHOW READS AS LOW BECAUSE WHEN I SET THEM TO ZERO they didnt run which means when its normal to difficulty to become one of the numbers  it somehow writes the difficulty to another value and thast hy it starts
-void selectDifficulty() {  // Changed return type to void
+//======== DIFFICULTY ========//
+void selectDifficulty() {
   int EASY_BUTTON     = digitalRead(EASY_BUTTON_PIN);
   int NORMAL_BUTTON   = digitalRead(NORMAL_BUTTON_PIN);
   int ADVANCED_BUTTON = digitalRead(ADVANCED_BUTTON_PIN);
