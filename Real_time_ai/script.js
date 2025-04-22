@@ -2,11 +2,8 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-
-// Initialize the brain.js network early.
 const net = new brain.NeuralNetwork();
 
-// Global variable to store the processed keypoints.
 let usedKeypoints = null;
 
 async function setupCamera() {
@@ -17,12 +14,12 @@ async function setupCamera() {
   });
 }
 
-// Helper function for flipping the x coordinate
+// flipping the x coordinate
 function flipX(x) {
   return canvas.width - x;
 }
 
-// Draw a point on the canvas (optional visualization)
+// Draw a point on the canvas
 function drawPoint(x, y, color = 'lime', size = 7) {
   ctx.beginPath();
   ctx.arc(x, y, size, 0, 2 * Math.PI);
@@ -217,18 +214,39 @@ logInputButton.addEventListener('click', () => {
   }
 });
 
-function updateFeedback(prediction) {
+async function updateFeedback(prediction) {
   let message = "";
-  if(prediction.leftElbow <0.5) message += "Left elbow is out of guard!<br>";
-  if(prediction.rightElbow <0.5) message += "Right elbow is out of guard!<br>";
-  if(prediction.leftWrist < 0.5) message += "Left wrist open!<br>";
-  if(prediction.rightWrist <0.5) message += "Right wrist open!<br>";
-  if(prediction.leftHip <0.5) message += "Left hip needs adjustment!<br>";
-  if(prediction.rightHip <0.5) message += "Right hip needs adjustment!<br>";
+  let text = null;
+
+  if(prediction.leftElbow < 0.5) { 
+    message += "Left elbow is out of guard!<br>";
+    text = 1;
+  } else if(prediction.rightElbow < 0.5) {
+    message += "Right elbow is out of guard!<br>";
+    text = 2;
+  } else if(prediction.leftWrist < 0.5) {
+    message += "Left wrist open!<br>";
+    text = 3;
+  } else if(prediction.rightWrist < 0.5) {
+    message += "Right wrist open!<br>";
+    text = 4;
+  }
+
+  if(prediction.leftHip < 0.5) message += "Left hip needs adjustment!<br>";
+  if(prediction.rightHip < 0.5) message += "Right hip needs adjustment!<br>";
   if(prediction.head < 0.5) message += "Head protection is compromised!<br>";
   if(!message) message = "Guard is solid!";
+
   document.querySelector('.feedback').innerHTML = message;
+
+  if(text !== null) {
+    const writer = port.writable.getWriter();
+    const data = new Uint8Array([text]);
+    await writer.write(data);
+    writer.releaseLock();
+  }
 }
+
 
 let trainingData = [];
 

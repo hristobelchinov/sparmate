@@ -9,6 +9,11 @@ Servo rightUppercut;
 
 #include "Combos.h"
 
+#define LEFTELBOW 1
+#define RIGHTELBOW 2
+#define LEFTWRIST 3
+#define RIGHTWRIST 4
+
 #define START_BUTTON_PIN     4
 #define EASY_BUTTON_PIN     22
 #define NORMAL_BUTTON_PIN   23
@@ -21,11 +26,12 @@ int  DIFFICULTY = 0;
 int  PUNCH_TIMEOUT;
 int  COMBO_TIMEOUT;
 
+bool interruptCombo = false; 
+
 void setup() {
   Serial.begin(115200);
 
   pinMode(START_BUTTON_PIN,    INPUT_PULLUP);
-
   pinMode(EASY_BUTTON_PIN,     INPUT_PULLUP);
   pinMode(NORMAL_BUTTON_PIN,   INPUT_PULLUP);
   pinMode(ADVANCED_BUTTON_PIN, INPUT_PULLUP);
@@ -65,17 +71,6 @@ void punch(Servo* punch) {
     delay(300);
     punch->write(10);
   }
-
-  // if (punch == JABF || punch == RIGHTHOOKF || punch == RIGHTUPPERCUTF) {
-  //   punch->write(120);
-  //   delay(180);
-  //   punch->write(170);
-  // }
-  // if (punch == CROSSF || punch == LEFTHOOKF || punch == LEFTUPPERCUTF) {
-  //   punch->write(60);
-  //   delay(180);
-  //   punch->write(10);
-  // }
 }
 
 //======== EXECUTE COMBO ========//
@@ -93,9 +88,49 @@ void fight(int DIFFICULTY) {
   for (int j = 0; j < MAX_MOVES; j++) {
     Servo* mv = DIFFICULTY_COMBOS_LIST[combo][j];
     if (mv == BLANK) return;
+
     punch(mv);
-    delay(PUNCH_TIMEOUT);
+    delay(PUNCH_TIMEOUT); 
+    interruptCombo = guardchecking();
+
+    if (interruptCombo) {
+      break;
+    }
+    
+  }// for loop
+  
+}// fight function
+
+//======== GUARD CHECKING FUNCTION ========//
+bool guardchecking() {
+  bool interrupted = false;
+
+  if (Serial.available()) {
+    int command = Serial.read();
+
+    switch (command) {
+      case LEFTELBOW:
+        punch(JAB); 
+        interrupted = true;
+        break;
+      case RIGHTELBOW:
+        punch(JAB);
+        interrupted = true;
+        break;
+      case LEFTWRIST:
+        punch(JAB);
+        interrupted = true;
+        break;
+      case RIGHTWRIST:
+        punch(JAB);  
+        interrupted = true;
+        break;
+      default:
+        break;
+    }
   }
+
+  return interrupted; 
 }
 
 //======== START/STOP BUTTON ========//
@@ -143,7 +178,7 @@ void selectDifficulty() {
 void loop() {
   startstop();
   if (running) {
-    selectDifficulty();  // Check for difficulty selection every loop
+    selectDifficulty(); 
     if (DIFFICULTY != 0) {
       fight(DIFFICULTY);
       delay(COMBO_TIMEOUT);
