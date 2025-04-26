@@ -130,6 +130,9 @@ bool guardchecking() {
           break;
       }
     }
+    else if (command == 99){
+      Serial.println(command);
+    }
   }
 
   return interrupted; 
