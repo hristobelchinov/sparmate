@@ -108,25 +108,27 @@ bool guardchecking() {
   if (Serial.available()) {
     int command = Serial.read();
 
-    switch (command) {
-      case LEFTELBOW:
-        punch(RIGHTUPPERCUT); 
-        interrupted = true;
-        break;
-      case RIGHTELBOW:
-        punch(LEFTUPPERCUT);
-        interrupted = true;
-        break;
-      case LEFTWRIST:
-        punch(LEFTHOOK);
-        interrupted = true;
-        break;
-      case RIGHTWRIST:
-        punch(RIGHTHOOK);  
-        interrupted = true;
-        break;
-      default:
-        break;
+    if (command >= 1 && command <= 4) {
+      switch (command) {
+        case LEFTELBOW:
+          punch(RIGHTUPPERCUT); 
+          interrupted = true;
+          break;
+        case RIGHTELBOW:
+          punch(LEFTUPPERCUT);
+          interrupted = true;
+          break;
+        case LEFTWRIST:
+          punch(LEFTHOOK);
+          interrupted = true;
+          break;
+        case RIGHTWRIST:
+          punch(RIGHTHOOK);  
+          interrupted = true;
+          break;
+        default:
+          break;
+      }
     }
   }
 
