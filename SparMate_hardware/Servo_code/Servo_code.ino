@@ -73,6 +73,20 @@ void punch(Servo* punch) {
   }
 }
 
+void feint(Servo* feint) {
+  if (feint == JAB_F || feint == RIGHTHOOK_F || feint == RIGHTUPPERCUT_F) {
+    feint->write(50)
+    delay(150);
+    feint->write(170)
+  }
+  if (feint == CROSS_F || feint == LEFTHOOK_F|| feint == LEFTUPPERCUT_F) {
+    feintMove->write(50);    
+    delay(150);             
+    feint->write(10);    
+  }
+}
+
+
 //======== EXECUTE COMBO ========//
 void fight(int DIFFICULTY) {
   int combo = random(0, 5);
@@ -89,7 +103,11 @@ void fight(int DIFFICULTY) {
     Servo* mv = DIFFICULTY_COMBOS_LIST[combo][j];
     if (mv == BLANK) return;
 
-    punch(mv);
+    if (mv == JAB_F || mv == CROSS_F || mv == LEFTHOOK_F || mv == RIGHTHOOK_F || mv == LEFTUPPERCUT_F || mv == RIGHTUPPERCUT_F) {
+      feint(mv);
+    } else {
+      punch(mv);
+    }
     delay(PUNCH_TIMEOUT); 
     interruptCombo = guardchecking();
 

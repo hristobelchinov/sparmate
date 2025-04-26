@@ -7,6 +7,13 @@
 #define RIGHTHOOK     (&rightHook)
 #define LEFTUPPERCUT  (&leftUppercut)
 #define RIGHTUPPERCUT (&rightUppercut)
+#define JAB_F           (&jab)
+#define CROSS_F        (&cross)
+#define LEFTHOOK_F      (&leftHook)
+#define RIGHTHOOK_F     (&rightHook)
+#define LEFTUPPERCUT_F  (&leftUppercut)
+#define RIGHTUPPERCUT_F (&rightUppercut)
+
 
 #define EASY_PUNCH_TIMEOUT     3000
 #define EASY_COMBO_TIMEOUT     5000
