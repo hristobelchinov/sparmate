@@ -9,10 +9,10 @@ Servo rightUppercut;
 
 #include "Combos.h"
 
-#define LEFTELBOW 1
-#define RIGHTELBOW 2
-#define LEFTWRIST 3
-#define RIGHTWRIST 4
+#define LEFTELBOW            1
+#define RIGHTELBOW           2
+#define LEFTWRIST            3
+#define RIGHTWRIST           4
 
 #define START_BUTTON_PIN     4
 #define EASY_BUTTON_PIN     22
@@ -110,19 +110,19 @@ bool guardchecking() {
 
     switch (command) {
       case LEFTELBOW:
-        punch(JAB); 
+        punch(RIGHTUPPERCUT); 
         interrupted = true;
         break;
       case RIGHTELBOW:
-        punch(JAB);
+        punch(LEFTUPPERCUT);
         interrupted = true;
         break;
       case LEFTWRIST:
-        punch(JAB);
+        punch(LEFTHOOK);
         interrupted = true;
         break;
       case RIGHTWRIST:
-        punch(JAB);  
+        punch(RIGHTHOOK);  
         interrupted = true;
         break;
       default:
@@ -138,6 +138,8 @@ void startstop() {
   int STARTSTOP_BUTTON = digitalRead(START_BUTTON_PIN);
   if (STARTSTOP_BUTTON == LOW) {
     running = !running;
+    DIFFICULTY = 0;
+    
     delay(200);
   }
 }
