@@ -1,4 +1,10 @@
 #include <ESP32Servo.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+const char* ssid = "Alek";                  
+const char* password = "boqnegej69";          
+const char* serverName = "http://172.20.10.3:3000/sensor";
 
 Servo jab;
 Servo cross;
@@ -57,6 +63,38 @@ void setup() {
   cross.write(10);
   leftHook.write(10);
   leftUppercut.write(10);
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected. IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void sendData(String label, int value) {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin(serverName);
+    http.addHeader("Content-Type", "application/json");
+
+    String json = "{\"" + label + "\":" + String(value) + "}";
+
+    int httpResponseCode = http.POST(json);
+    if (httpResponseCode > 0) {
+      Serial.println("Data sent successfully: " + label);
+    } else {
+      Serial.print("Error sending data. HTTP code: ");
+      Serial.println(httpResponseCode);
+    }
+
+    http.end();
+  } else {
+    Serial.println("WiFi not connected");
+  }
 }
 
 //======== EXECUTE A PUNCH ========//
@@ -162,7 +200,7 @@ void startstop() {
   if (STARTSTOP_BUTTON == LOW) {
     running = !running;
     DIFFICULTY = 0;
-    
+
     delay(200);
   }
 }
@@ -199,6 +237,7 @@ void selectDifficulty() {
     delay(200);  // Debounce
   }
 }
+
 
 void loop() {
   startstop();
